@@ -1,0 +1,7 @@
+http://aptima-ros-pkg.googlecode.com/svn/trunk/imu_um6/nodes/imu_pose.py
+
+Buffer problem
+
+http://answers.ros.org/question/28890/using-rosserial-for-a-atmega168arduino-based/
+http://answers.ros.org/question/12544/arduino-rosserial-noslow-communication/
+http://answers.ros.org/question/12782/rosserial_arduino-cant-send-a-sensor_msgsimu-msg/

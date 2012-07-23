@@ -1,0 +1,3 @@
+If you suffer from compile problem of Arduino in Ubuntu 11.10, see following website. You should modify math.h.
+
+http://forums.reprap.org/read.php?146,107925,107925,quote=1
