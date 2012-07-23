@@ -12,7 +12,7 @@
 //
 
 #include "AP_GPS_MTK.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 // Constructors ////////////////////////////////////////////////////////////////
 AP_GPS_MTK::AP_GPS_MTK(Stream *s) : GPS(s)
@@ -44,7 +44,7 @@ void AP_GPS_MTK::init(void)
 //
 void AP_GPS_MTK::update(void)
 {
-	byte data;
+	char data;
 	int numc;
 
 	numc = _port->available();

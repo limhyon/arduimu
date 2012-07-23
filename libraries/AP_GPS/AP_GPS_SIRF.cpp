@@ -10,7 +10,7 @@
 //
 
 #include "AP_GPS_SIRF.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 // Initialisation messages
 //
@@ -52,7 +52,7 @@ void AP_GPS_SIRF::init(void)
 //
 void AP_GPS_SIRF::update(void)
 {
-	byte data;
+	char data;
 	int numc;
 
 	numc = _port->available();

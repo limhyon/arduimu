@@ -1,7 +1,7 @@
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: t -*-
 
 #include "GPS.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 int
 GPS::status(void)

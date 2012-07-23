@@ -11,7 +11,7 @@
 
 #include "../FastSerial/FastSerial.h"	// because we need to change baud rates... ugh.
 #include "AP_GPS_406.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 static const char init_str[] = "$PSRF100,0,57600,8,1,0*37";
 

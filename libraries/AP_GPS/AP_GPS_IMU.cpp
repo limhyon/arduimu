@@ -28,7 +28,7 @@
 			
 */
 #include "AP_GPS_IMU.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 
 // Constructors ////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ void AP_GPS_IMU::init(void)
 // If we get a complete packet this function calls parse_IMU_gps() to parse and update the GPS info.
 void AP_GPS_IMU::update(void)
 {
-	byte data;
+	char data;
 	int numc = 0;
 	static byte message_num = 0;
 

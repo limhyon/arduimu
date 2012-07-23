@@ -10,7 +10,7 @@
 //
 
 #include "AP_GPS_UBLOX.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 // Constructors ////////////////////////////////////////////////////////////////
 
@@ -39,7 +39,7 @@ void AP_GPS_UBLOX::init(void)
 //
 void AP_GPS_UBLOX::update(void)
 {
-	byte data;
+	char data;
 	int numc;
 
 	numc = _port->available();

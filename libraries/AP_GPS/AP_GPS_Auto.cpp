@@ -4,9 +4,10 @@
 //
 
 #include "AP_GPS.h"
+#include <Arduino.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <wiring.h>
+#include <wire.h>
 
 static unsigned int	baudrates[] = {38400U, 57600U, 9600U, 4800U};
 

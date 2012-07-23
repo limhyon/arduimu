@@ -33,11 +33,14 @@
                 Big capacitor pointing backward, connector forward
 		
 */
+#include <Arduino.h>
+
 extern "C" {
   // AVR LibC Includes
   #include <math.h>
-  #include "WConstants.h"
+  //#include "Wiring.h"
 }
+
 
 #include <Wire.h>
 #include "APM_Compass.h"
@@ -89,22 +92,22 @@ bool APM_Compass_Class::Init(int initialiseWireLib)
   
 	  // force positiveBias (compass should return 715 for all channels)
 	  Wire.beginTransmission(CompassAddress);
-	  Wire.send(ConfigRegA);
-	  Wire.send(PositiveBiasConfig);
+	  Wire.write(ConfigRegA);
+	  Wire.write(PositiveBiasConfig);
 	  if (0 != Wire.endTransmission())
 		 continue;			// compass not responding on the bus
 	  delay(50);
 	  
 	  // set gains
 	  Wire.beginTransmission(CompassAddress);
-	  Wire.send(ConfigRegB);
-	  Wire.send(MagGain);
+	  Wire.write(ConfigRegB);
+	  Wire.write(MagGain);
 	  Wire.endTransmission();
 	  delay(10);  
 
 	  Wire.beginTransmission(CompassAddress);
-	  Wire.send(ModeRegister);
-	  Wire.send(SingleConversion);
+	  Wire.write(ModeRegister);
+	  Wire.write(SingleConversion);
 	  Wire.endTransmission();
 	  delay(10);
 	  
@@ -125,14 +128,14 @@ bool APM_Compass_Class::Init(int initialiseWireLib)
 		
 	  // leave test mode
 	  Wire.beginTransmission(CompassAddress);
-	  Wire.send(ConfigRegA);
-	  Wire.send(NormalOperation);
+	  Wire.write(ConfigRegA);
+	  Wire.write(NormalOperation);
 	  Wire.endTransmission();
 	  delay(50);
 
 	  Wire.beginTransmission(CompassAddress);
-	  Wire.send(ModeRegister);
-	  Wire.send(ContinuousConversion);        // Set continuous mode (default to 10Hz)
+	  Wire.write(ModeRegister);
+	  Wire.write(ContinuousConversion);        // Set continuous mode (default to 10Hz)
 	  Wire.endTransmission();                 // End transmission
 	  delay(50);
   }
@@ -146,14 +149,14 @@ void APM_Compass_Class::Read()
   byte buff[6];
  
   Wire.beginTransmission(CompassAddress); 
-  Wire.send(0x03);        //sends address to read from
+  Wire.write(0x03);        //sends address to read from
   Wire.endTransmission(); //end transmission
   
   //Wire.beginTransmission(CompassAddress); 
   Wire.requestFrom(CompassAddress, 6);    // request 6 bytes from device
   while(Wire.available())     
   { 
-    buff[i] = Wire.receive();  // receive one byte
+    buff[i] = Wire.read();  // receive one byte
     i++;
   }
   Wire.endTransmission(); //end transmission

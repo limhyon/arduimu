@@ -12,7 +12,7 @@
 //
 
 #include "AP_GPS_HIL.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 // Constructors ////////////////////////////////////////////////////////////////
 AP_GPS_HIL::AP_GPS_HIL(Stream *s) : GPS(s)
