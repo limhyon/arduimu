@@ -76,15 +76,15 @@ bool HMC5883_init()
   //mag_offset[2] = 0;
 
   Wire.beginTransmission(COMPASS_ADDRESS);
-  Wire.send((uint8_t)ConfigRegA);
+  Wire.write((uint8_t)ConfigRegA);
   aux_byte = (SampleAveraging_8<<5 | DataOutputRate_75HZ<<2 | NormalOperation);
-  Wire.send(aux_byte);
+  Wire.write(aux_byte);
   Wire.endTransmission();
   delay(50);
 
   Wire.beginTransmission(COMPASS_ADDRESS);
-  Wire.send((uint8_t)ModeRegister);
-  Wire.send((uint8_t)ContinuousConversion);        // Set continuous mode (default to 10Hz)
+  Wire.write((uint8_t)ModeRegister);
+  Wire.write((uint8_t)ContinuousConversion);        // Set continuous mode (default to 10Hz)
   Wire.endTransmission();                 // End transmission
   delay(50);
   
@@ -106,14 +106,14 @@ void HMC5883_read()
   byte buff[6];
 
   Wire.beginTransmission(COMPASS_ADDRESS);
-  Wire.send(0x03);        //sends address to read from
+  Wire.write(0x03);        //sends address to read from
   Wire.endTransmission(); //end transmission
 
     //Wire.beginTransmission(COMPASS_ADDRESS);
   Wire.requestFrom(COMPASS_ADDRESS, 6);    // request 6 bytes from device
   while(Wire.available())
   {
-    buff[i] = Wire.receive();  // receive one byte
+    buff[i] = Wire.read();  // receive one byte
     i++;
   }
   Wire.endTransmission(); //end transmission

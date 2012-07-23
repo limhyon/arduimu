@@ -12,21 +12,22 @@
 // Enhancements to the Arduino Stream class.
 //
 
+#include <limits.h>
 #include "BetterStream.h"
 
 // Stream extensions////////////////////////////////////////////////////////////
 
 void
-BetterStream::print_P(const prog_char *s)
+BetterStream::print_P(const prog_char_t *s)
 {
         char    c;
 
-        while ('\0' != (c = pgm_read_byte(s++)))
+        while ('\0' != (c = pgm_read_byte((const prog_char *)s++)))
                 write(c);
 }
 
 void
-BetterStream::println_P(const char *s)
+BetterStream::println_P(const prog_char_t *s)
 {
         print_P(s);
         println();
@@ -43,7 +44,7 @@ BetterStream::printf(const char *fmt, ...)
 }
 
 void
-BetterStream::printf_P(const char *fmt, ...)
+BetterStream::_printf_P(const prog_char *fmt, ...)
 {
         va_list ap;
 
@@ -52,3 +53,9 @@ BetterStream::printf_P(const char *fmt, ...)
         va_end(ap);
 }
 
+int
+BetterStream::txspace(void)
+{
+        // by default claim that there is always space in transmit buffer
+        return(INT_MAX);
+}
