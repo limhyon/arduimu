@@ -64,23 +64,25 @@ class arduimuDrv:
 		mid = pkt[1]
 		if mid == 0x04:
 			#print "ROS Data"
-			roll_raw = ''.join([chr(val) for val in pkt[3:7]])
-			self.roll = 180*self.decode_float(roll_raw)/math.pi
-			pitch_raw = ''.join([chr(val) for val in pkt[7:11]])
-			self.pitch = 180*self.decode_float(pitch_raw)/math.pi
-			yaw_raw = ''.join([chr(val) for val in pkt[11:15]])
-			self.yaw = 180*self.decode_float(yaw_raw)/math.pi
+			hexdata = ''.join([chr(val) for val in pkt[3:7]])
+			self.q0 = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[7:11]])
+			self.q1 = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[11:15]])
+			self.q2 = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[15:19]])
-			self.ang_vel_x = self.decode_float(hexdata)
+			self.q3 = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[19:23]])
-			self.ang_vel_y = self.decode_float(hexdata)
+			self.ang_vel_x = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[23:27]])
-			self.ang_vel_z = self.decode_float(hexdata)
+			self.ang_vel_y = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[27:31]])
-			self.lin_acc_x = self.decode_float(hexdata)
+			self.ang_vel_z = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[31:35]])
-			self.lin_acc_y = self.decode_float(hexdata)
+			self.lin_acc_x = self.decode_float(hexdata)
 			hexdata = ''.join([chr(val) for val in pkt[35:39]])
+			self.lin_acc_y = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[39:43]])
 			self.lin_acc_z = self.decode_float(hexdata)
 			#print "[Bus:%d] roll %2.2f pitch %2.2f yaw %2.2f"%(bid,self.roll,self.pitch,self.yaw)
 			#print "%2.2f %2.2f %2.2f"%(self.ang_vel_x,self.ang_vel_y,self.ang_vel_z)
@@ -89,10 +91,10 @@ class arduimuDrv:
 
 
 		self.quaternion = []
-		self.quaternion.append(1.0)
-		self.quaternion.append(0.0)
-		self.quaternion.append(0.0)
-		self.quaternion.append(0.0)
+		self.quaternion.append(self.q0)
+		self.quaternion.append(self.q1)
+		self.quaternion.append(self.q2)
+		self.quaternion.append(self.q3)
 
 		results = {}
 		results['DATA_QUATERNION'] = self.quaternion
@@ -102,9 +104,6 @@ class arduimuDrv:
 		results['DATA_LINEAR_ACCEL'] = [self.lin_acc_x, 
                                                 self.lin_acc_y, 
                                                 self.lin_acc_z]
-		results['DATA_ROLL_PITCH_YAW'] = [self.roll, 
-                                                  self.pitch, 
-                                                  self.yaw]
 
 		if (self.data_callback is not None):
                 	self.data_callback(results)
@@ -127,9 +126,14 @@ class arduimuDrv:
 
 if __name__ == '__main__':
 
-	def data_cb(data): print "rx pkt"
+	def data_cb(data):
+		q = [data['DATA_QUATERNION'][0],
+		     data['DATA_QUATERNION'][1],
+		     data['DATA_QUATERNION'][2],
+		     data['DATA_QUATERNION'][3]]
+		print q
 
-	arduimu = arduimuDrv('/dev/ttyUSB0', data_cb) #3 = COM4 in windows, use '/dev/ttyUSB' style in unix
+	arduimu = arduimuDrv('/dev/ttyUSB1', data_cb) #3 = COM4 in windows, use '/dev/ttyUSB' style in unix
 
 	while(True):
         	arduimu.update()

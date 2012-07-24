@@ -34,7 +34,7 @@
 #define GPS_PROTOCOL 4    // 1 - NMEA,  2 - EM406,  3 - Ublox, 4 -- MediaTek  
 
 // Enable Air Start uses Remove Before Fly flag - connection to pin 6 on ArduPilot 
-#define ENABLE_AIR_START 0  //  1 if using airstart/groundstart signaling, 0 if not
+#define ENABLE_AIR_START 1  //  1 if using airstart/groundstart signaling, 0 if not
 #define GROUNDSTART_PIN 8    //  Pin number used for ground start signal (recommend 10 on v1 and 8 on v2 hardware)
 
 /*Min Speed Filter for Yaw drift Correction*/
@@ -192,6 +192,10 @@ float DCM_Matrix[3][3]= {
   ,{
     0,0,1  }
 }; 
+
+//hyon
+float q[4] = {1, 0, 0, 0};
+
 float Update_Matrix[3][3]={{0,1,2},{3,4,5},{6,7,8}}; //Gyros here
 
 float Temporary_Matrix[3][3]={
@@ -361,12 +365,14 @@ void loop() //Main Loop
     Read_adc_raw();
 
     Matrix_update(); 
+    //Quat_Update();
 
     Normalize();
 
     Drift_correction();
    
     Euler_angles();
+    DCM2Quat(DCM_Matrix,q);
     
     //Serial.print(timer-timer_old);
     //Serial.print("\t");

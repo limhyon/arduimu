@@ -1,6 +1,6 @@
 <launch>
     <node pkg="arduimu_ros" type="imu_arduimu_node.py" name="imu_arduimu_node" output="screen" respawn="true">
-        <param name="port" type="string" value="/dev/ttyUSB0"/>
+        <param name="port" type="string" value="/dev/ttyUSB1"/>
     </node>
 
     <node pkg="tf" type="static_transform_publisher" name="imu_tf" args="0 0 1.03 0 0 0 map imu_link 50" />

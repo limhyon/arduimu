@@ -35,23 +35,24 @@ int packAttitudeRPY(byte* pkt,float roll, float pitch, float yaw)
   return 3+12;  // BID+MID+LEN(=3) + 12
 }
 
-int packROS(byte* pkt, float roll,float pitch, float yaw, float wx, float wy, float wz, float ax, float ay, float az)
+int packROS(byte* pkt, float q0,float q1, float q2, float q3, float wx, float wy, float wz, float ax, float ay, float az)
 {
   *(pkt+0) = BID;            // BID
   *(pkt+1) = MSG_ROS;  // MID
-  *(pkt+2) = 36;  // Message length
+  *(pkt+2) = 40;  // Message length
   
-  serialToCharBuf(roll,pkt,3);
-  serialToCharBuf(pitch,pkt,7);
-  serialToCharBuf(yaw,pkt,11);
-  serialToCharBuf(wx,pkt,15);
-  serialToCharBuf(wy,pkt,19);
-  serialToCharBuf(wz,pkt,23);
-  serialToCharBuf(ax,pkt,27);
-  serialToCharBuf(ay,pkt,31);
-  serialToCharBuf(az,pkt,35);
+  serialToCharBuf(q0,pkt,3);
+  serialToCharBuf(q1,pkt,7);
+  serialToCharBuf(q2,pkt,11);
+  serialToCharBuf(q3,pkt,15);
+  serialToCharBuf(wx,pkt,19);
+  serialToCharBuf(wy,pkt,23);
+  serialToCharBuf(wz,pkt,27);
+  serialToCharBuf(ax,pkt,31);
+  serialToCharBuf(ay,pkt,35);
+  serialToCharBuf(az,pkt,39);
   
-  return 3+36;  // BID+MID+LEN(=3) + 12
+  return 3+40;  // BID+MID+LEN(=3) + 40
 }
 
 void printdata(void)
@@ -254,7 +255,7 @@ void printdata(void)
     
     Serial.print("STX");
     //packet_len = packAttitudeRPY(packet,roll,pitch,yaw);
-    packet_len = packROS(packet,roll,pitch,yaw,Omega_Vector[0],Omega_Vector[1],Omega_Vector[2],Accel_Vector[0],Accel_Vector[1],Accel_Vector[2]);
+    packet_len = packROS(packet,q[0],q[1],q[2],q[3],Omega_Vector[0],Omega_Vector[1],Omega_Vector[2],Accel_Vector[0],Accel_Vector[1],Accel_Vector[2]);
 
     // This section outputs the IMU orientatiom message
     //Serial.print("STX");  // This is the message preamble

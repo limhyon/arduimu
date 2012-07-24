@@ -58,10 +58,10 @@ class ImuArduIMUNode(object):
         self.imu_data.orientation = Quaternion()
 
         # IMU outputs [w,x,y,z] NED, convert to [x,y,z,w] ENU
-        q = [data['DATA_QUATERNION'][2],
+        q = [data['DATA_QUATERNION'][0],
              data['DATA_QUATERNION'][1],
-            -data['DATA_QUATERNION'][3],
-             data['DATA_QUATERNION'][0]]
+             data['DATA_QUATERNION'][2],
+             data['DATA_QUATERNION'][3]]
 
         self.imu_data.orientation.x = q[0] 
         self.imu_data.orientation.y = q[1]
