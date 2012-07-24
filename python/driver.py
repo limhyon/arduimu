@@ -37,11 +37,17 @@ class arduimuDrv:
 		packet = []
 
 		# check 0x06 (imu) or 0x13 (gps) or 0x11 (performance)
-		pkt_kind = self.chToByte(self.ser.read())
+		#pkt_kind = self.chToByte(self.ser.read())
 
-		print pkt_kind
+		for i in range(0, 2+4+4+4+2): # 4 bytes per register
+			byte = self.ser.read() #self.chToByte(self.ser.read())
+			print byte
+			packet.append(byte)
+		#	calcChkSum += byte
 
-		print "readPacket"
+		print packet
+
+		#print "readPacket"
 
 		return packet;
 

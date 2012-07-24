@@ -1,3 +1,20 @@
+void serialFloatPrint(float f) 
+{
+  byte * b = (byte *) &f;
+  Serial.write(b[0]);
+  Serial.write(b[1]);
+  Serial.write(b[2]);
+  Serial.write(b[3]);
+}
+
+void serialToCharBuf(float f, byte* t, int base)
+{
+	byte *b = (byte *)&f;
+	*(t+base+0) = b[0];
+	*(t+base+1) = b[1];
+	*(t+base+2) = b[2];
+	*(t+base+3) = b[3];
+}
 
 void printdata(void)
 {    
@@ -139,7 +156,7 @@ void printdata(void)
     gps_messages_sent++;
 #endif
     GPS.new_data=0;
-    Serial.print("sn");  // This is the message preamble
+    Serial.print("snp");  // This is the message preamble
     IMU_buffer[0]=0x13;
     ck=19;
     IMU_buffer[1] = 0x03;      
@@ -194,24 +211,29 @@ void printdata(void)
 
     // This section outputs the IMU orientatiom message
     Serial.print("snp");  // This is the message preamble
-    IMU_buffer[0]=0x06;
-    ck=6;
-    IMU_buffer[1] = 0x02;      
+    IMU_buffer[0]=0xAA;
+    ck=12;
+    IMU_buffer[1] = 0xBB;   
 
-    tempint=ToDeg(roll)*100;  //Roll (degrees) * 100 in 2 bytes
-    IMU_buffer[2]=tempint&0xff;
-    IMU_buffer[3]=(tempint>>8)&0xff;
+    serialToCharBuf(roll,IMU_buffer,2);
+    serialToCharBuf(pitch,IMU_buffer,6);
+    serialToCharBuf(yaw,IMU_buffer,10);
+       
 
-    tempint=ToDeg(pitch)*100;   //Pitch (degrees) * 100 in 2 bytes
-    IMU_buffer[4]=tempint&0xff;
-    IMU_buffer[5]=(tempint>>8)&0xff;
+    //tempint=ToDeg(roll)*100;  //Roll (degrees) * 100 in 2 bytes
+    //IMU_buffer[2]=tempint&0xff;
+    //IMU_buffer[3]=(tempint>>8)&0xff;
 
-    templong=ToDeg(yaw)*100;  //Yaw (degrees) * 100 in 2 bytes
-    if(templong>18000) templong -=36000;
-    if(templong<-18000) templong +=36000;
-    tempint = templong;
-    IMU_buffer[6]=tempint&0xff;
-    IMU_buffer[7]=(tempint>>8)&0xff;
+    //tempint=ToDeg(pitch)*100;   //Pitch (degrees) * 100 in 2 bytes
+    //IMU_buffer[4]=tempint&0xff;
+   // IMU_buffer[5]=(tempint>>8)&0xff;
+
+    //templong=ToDeg(yaw)*100;  //Yaw (degrees) * 100 in 2 bytes
+    //if(templong>18000) templong -=36000;
+    //if(templong<-18000) templong +=36000;
+    //tempint = templong;
+   // IMU_buffer[6]=tempint&0xff;
+    //IMU_buffer[7]=(tempint>>8)&0xff;
 
     for (int i=0;i<ck+2;i++) Serial.print (IMU_buffer[i]);
 
