@@ -62,15 +62,52 @@ class arduimuDrv:
 		bid = pkt[0];
 		# Check MID
 		mid = pkt[1]
-		if mid == 0x01:
-			#print "IMU Data"
+		if mid == 0x04:
+			#print "ROS Data"
 			roll_raw = ''.join([chr(val) for val in pkt[3:7]])
-			roll = 180*self.decode_float(roll_raw)/math.pi
+			self.roll = 180*self.decode_float(roll_raw)/math.pi
 			pitch_raw = ''.join([chr(val) for val in pkt[7:11]])
-			pitch = 180*self.decode_float(pitch_raw)/math.pi
+			self.pitch = 180*self.decode_float(pitch_raw)/math.pi
 			yaw_raw = ''.join([chr(val) for val in pkt[11:15]])
-			yaw = 180*self.decode_float(yaw_raw)/math.pi
-			print "[Bus:%d] roll %2.2f pitch %2.2f yaw %2.2f"%(bid,roll,pitch,yaw)
+			self.yaw = 180*self.decode_float(yaw_raw)/math.pi
+			hexdata = ''.join([chr(val) for val in pkt[15:19]])
+			self.ang_vel_x = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[19:23]])
+			self.ang_vel_y = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[23:27]])
+			self.ang_vel_z = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[27:31]])
+			self.lin_acc_x = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[31:35]])
+			self.lin_acc_y = self.decode_float(hexdata)
+			hexdata = ''.join([chr(val) for val in pkt[35:39]])
+			self.lin_acc_z = self.decode_float(hexdata)
+			#print "[Bus:%d] roll %2.2f pitch %2.2f yaw %2.2f"%(bid,self.roll,self.pitch,self.yaw)
+			#print "%2.2f %2.2f %2.2f"%(self.ang_vel_x,self.ang_vel_y,self.ang_vel_z)
+			
+
+
+
+		self.quaternion = []
+		self.quaternion.append(1.0)
+		self.quaternion.append(0.0)
+		self.quaternion.append(0.0)
+		self.quaternion.append(0.0)
+
+		results = {}
+		results['DATA_QUATERNION'] = self.quaternion
+		results['DATA_ANGULAR_VEL'] = [self.ang_vel_x, 
+                                               self.ang_vel_y, 
+                                               self.ang_vel_z]
+		results['DATA_LINEAR_ACCEL'] = [self.lin_acc_x, 
+                                                self.lin_acc_y, 
+                                                self.lin_acc_z]
+		results['DATA_ROLL_PITCH_YAW'] = [self.roll, 
+                                                  self.pitch, 
+                                                  self.yaw]
+
+		if (self.data_callback is not None):
+                	self.data_callback(results)
 
 	def chToByte(self, ch):
         	# convert single char string to unsigned byte

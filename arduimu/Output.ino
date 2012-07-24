@@ -1,3 +1,8 @@
+#define MSG_ATTITUDE 0x01
+#define MSG_GPS 0x02
+#define MSG_PERF 0x03
+#define MSG_ROS 0x04
+
 void serialFloatPrint(float f) 
 {
   byte * b = (byte *) &f;
@@ -14,6 +19,39 @@ void serialToCharBuf(float f, byte* t, int base)
 	*(t+base+1) = b[1];
 	*(t+base+2) = b[2];
 	*(t+base+3) = b[3];
+}
+
+// Return pkt length.
+int packAttitudeRPY(byte* pkt,float roll, float pitch, float yaw)
+{
+  *(pkt+0) = BID;            // BID
+  *(pkt+1) = MSG_ATTITUDE;  // MID
+  *(pkt+2) = 12;  // Message length
+  
+  serialToCharBuf(roll,pkt,3);
+  serialToCharBuf(pitch,pkt,7);
+  serialToCharBuf(yaw,pkt,11);
+  
+  return 3+12;  // BID+MID+LEN(=3) + 12
+}
+
+int packROS(byte* pkt, float roll,float pitch, float yaw, float wx, float wy, float wz, float ax, float ay, float az)
+{
+  *(pkt+0) = BID;            // BID
+  *(pkt+1) = MSG_ROS;  // MID
+  *(pkt+2) = 36;  // Message length
+  
+  serialToCharBuf(roll,pkt,3);
+  serialToCharBuf(pitch,pkt,7);
+  serialToCharBuf(yaw,pkt,11);
+  serialToCharBuf(wx,pkt,15);
+  serialToCharBuf(wy,pkt,19);
+  serialToCharBuf(wz,pkt,23);
+  serialToCharBuf(ax,pkt,27);
+  serialToCharBuf(ay,pkt,31);
+  serialToCharBuf(az,pkt,35);
+  
+  return 3+36;  // BID+MID+LEN(=3) + 12
 }
 
 void printdata(void)
@@ -149,6 +187,11 @@ void printdata(void)
   long templong;
   byte IMU_ck_a=0;
   byte IMU_ck_b=0;
+  
+  byte packet[100];
+  int packet_len = 0;
+  int chksum = 0;
+  byte chksum_byte = 0;
 
   //  This section outputs the gps binary message when new gps data is available
   if(GPS.new_data==1) {
@@ -208,16 +251,16 @@ void printdata(void)
 
   } 
   else {
+    
+    Serial.print("STX");
+    //packet_len = packAttitudeRPY(packet,roll,pitch,yaw);
+    packet_len = packROS(packet,roll,pitch,yaw,Omega_Vector[0],Omega_Vector[1],Omega_Vector[2],Accel_Vector[0],Accel_Vector[1],Accel_Vector[2]);
 
     // This section outputs the IMU orientatiom message
-    Serial.print("snp");  // This is the message preamble
-    IMU_buffer[0]=0xAA;
-    ck=12;
-    IMU_buffer[1] = 0xBB;   
-
-    serialToCharBuf(roll,IMU_buffer,2);
-    serialToCharBuf(pitch,IMU_buffer,6);
-    serialToCharBuf(yaw,IMU_buffer,10);
+    //Serial.print("STX");  // This is the message preamble
+    //IMU_buffer[0]=0xAA;
+    //ck=12;
+    //IMU_buffer[1] = 0xBB;
        
 
     //tempint=ToDeg(roll)*100;  //Roll (degrees) * 100 in 2 bytes
@@ -235,14 +278,18 @@ void printdata(void)
    // IMU_buffer[6]=tempint&0xff;
     //IMU_buffer[7]=(tempint>>8)&0xff;
 
-    for (int i=0;i<ck+2;i++) Serial.print (IMU_buffer[i]);
+    for (int i=0;i<packet_len;i++) 
+      Serial.write (packet[i]);
 
-    for (int i=0;i<ck+2;i++) {
-      IMU_ck_a+=IMU_buffer[i];  //Calculates checksums
-      IMU_ck_b+=IMU_ck_a;       
+    for (int i=0;i<packet_len;i++) 
+    {
+      chksum = chksum + packet[i];
     }
-    Serial.print(IMU_ck_a);
-    Serial.print(IMU_ck_b);
+    
+    chksum_byte = chksum & 0x00FF;  // throw-out carry nibble.
+    chksum_byte = 0xFF - chksum_byte + 1; // 2's complement.
+    
+    Serial.write(chksum_byte);
 
   }
 

@@ -1,0 +1,17 @@
+<package>
+  <description brief="arduimu_ros">
+This package is a ROS driver for the ArduIMU +v3 
+  </description>
+  <author>Hyon Lim</author>
+  <license>GPLv3</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/arduimu</url>
+
+  <depend package="rospy"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tf"/>
+
+</package>
+
+

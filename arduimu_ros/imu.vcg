@@ -1,0 +1,75 @@
+Background\ ColorR=0
+Background\ ColorG=0
+Background\ ColorB=0
+Fixed\ Frame=/map
+Target\ Frame=/imu_link
+Axes.Enabled=1
+Axes.Length=1
+Axes.Radius=0.1
+Axes.Reference\ Frame=<Fixed Frame>
+Grid.Alpha=0.5
+Grid.Cell\ Size=1
+Grid.ColorR=0.5
+Grid.ColorG=0.5
+Grid.ColorB=0.5
+Grid.Enabled=1
+Grid.Line\ Style=0
+Grid.Line\ Width=0.03
+Grid.Normal\ Cell\ Count=0
+Grid.OffsetX=0
+Grid.OffsetY=0
+Grid.OffsetZ=0
+Grid.Plane=0
+Grid.Plane\ Cell\ Count=10
+Grid.Reference\ Frame=/map
+Pose.Axes\ Length=0.5
+Pose.Axes\ Radius=0.1
+Pose.Enabled=1
+Pose.Shape=1
+Pose.Topic=/imu_pose
+Pose2.Alpha=1
+Pose2.ColorR=1
+Pose2.ColorG=0.1
+Pose2.ColorB=0
+Pose2.Enabled=1
+Pose2.Head\ Length=0.3
+Pose2.Head\ Radius=0.2
+Pose2.Shaft\ Length=1
+Pose2.Shaft\ Radius=0.1
+Pose2.Shape=0
+Pose2.Topic=/imu_pose
+TF.All\ Enabled=0
+TF.Enabled=1
+TF.Frame\ Timeout=15
+TF.Show\ Arrows=1
+TF.Show\ Axes=1
+TF.Show\ Names=1
+TF.Update\ Interval=0
+Tool\ 2D\ Nav\ GoalTopic=move_base_simple/goal
+Tool\ 2D\ Pose\ EstimateTopic=initialpose
+Camera\ Type=rviz::OrbitViewController
+Camera\ Config=0.895797 3.8816 10 0 0 0
+Property\ Grid\ State=selection=Pose.Axes Radius;expanded=.Global Options,Pose.Enabled,Pose.Enabled.Pose.Shape Properties,TF./imu_link/imu_link,TF./map/map,TF.Enabled.TF.Tree,TF./mapTree/map,TF./imu_linkTree/imu_link,Axes.Enabled,Pose2.Enabled,Pose2.Enabled.Pose2.Shape Properties;scrollpos=0,0;splitterpos=163,327;ispageselected=1
+[Display0]
+Name=Pose
+Package=rviz
+ClassName=rviz::PoseDisplay
+[Display1]
+Name=TF
+Package=rviz
+ClassName=rviz::TFDisplay
+[Display2]
+Name=Grid
+Package=rviz
+ClassName=rviz::GridDisplay
+[Display3]
+Name=Axes
+Package=rviz
+ClassName=rviz::AxesDisplay
+[Display4]
+Name=Pose2
+Package=rviz
+ClassName=rviz::PoseDisplay
+[TF.]
+imu_linkEnabled=1
+mapEnabled=0

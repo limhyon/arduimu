@@ -147,6 +147,9 @@ AP_GPS_MTK		GPS(&Serial);
 #define FALSE 0
 #define TRUE 1
 
+//Hyon
+#define BID  0xFF
+
 float G_Dt=0.02;    // Integration time (DCM algorithm)
 
 long timeNow=0; // Hold the milliseond value for now
@@ -256,7 +259,7 @@ volatile uint8_t analog_count[8];
 //*****************************************************************************************
 void setup()
 { 
-  Serial.begin(38400, 128, 16);
+  Serial.begin(115200, 128, 16);
   pinMode(SERIAL_MUX_PIN,OUTPUT); //Serial Mux
   if (GPS_CONNECTION == 0){
     digitalWrite(SERIAL_MUX_PIN,HIGH); //Serial Mux
